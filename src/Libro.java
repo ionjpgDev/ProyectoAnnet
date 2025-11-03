@@ -1,21 +1,24 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
+import java.util.UUID;
 
 public class Libro {
     private String libroId,titulo,autor,editorial,isbn,categoria;
-    private int stock;
-    private double pracio;
-    private Date fechaPublicacion;
+    private int stock,anioPublicacion;
+    private double precio;
 
-    public Libro(String libroId, String titulo, String autor, String editorial, String isbn, double pracio, String categoria, int stock, Date fechaPublicacion) {
-        this.libroId = libroId;
+
+    public Libro(String titulo, String autor, String editorial, String isbn, String categoria, int anioPublicacion) {
+        this.libroId = "LBR-"+ UUID.randomUUID().toString().substring(0,8).toUpperCase();
         this.titulo = titulo;
         this.autor = autor;
         this.editorial = editorial;
         this.isbn = isbn;
-        this.pracio = pracio;
+        this.precio = 0;
         this.categoria = categoria;
-        this.stock = stock;
-        this.fechaPublicacion = fechaPublicacion;
+        this.stock = 0;
+        this.anioPublicacion = anioPublicacion;
     }
 
     public String getLibroId() {
@@ -74,20 +77,56 @@ public class Libro {
         this.stock = stock;
     }
 
-    public double getPracio() {
-        return pracio;
+    public double getprecio() {
+        return precio;
     }
 
-    public void setPracio(double pracio) {
-        this.pracio = pracio;
+    public void setprecio(double precio) {
+        this.precio = precio;
     }
 
-    public Date getFechaPublicacion() {
-        return fechaPublicacion;
+    public int getAnioPublicacion() {
+        return anioPublicacion;
     }
 
-    public void setFechaPublicacion(Date fechaPublicacion) {
-        this.fechaPublicacion = fechaPublicacion;
+
+    public void setAnioPublicacion(int anioPublicacion) {
+        this.anioPublicacion = anioPublicacion;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public void agregarStock(int cantidad){
+        this.stock=stock+cantidad;
+        System.out.println("Stock actualizado");
+    }
+    public void reducirStock(int cantidad){
+        if (cantidad>stock){
+            System.out.println("Cantidad insuficiente en stock");
+        }
+        else {
+            this.stock=stock-cantidad;
+            System.out.println("Stock actualizado");
+        }
+    }
+
+
+    public void obtenerInfoCompleta(){
+        System.out.println("┌─────────────────────────────────────────────────┐");
+        System.out.println("│             INFORMACIÓN DEL LIBRO               │");
+        System.out.println("├─────────────────────────────────────────────────┤");
+        System.out.printf ("│ %-15s: %-30s │%n", "ID Libro", libroId);
+        System.out.printf ("│ %-15s: %-30s │%n", "Título", titulo);
+        System.out.printf ("│ %-15s: %-30s │%n", "Autor", autor);
+        System.out.printf ("│ %-15s: %-30s │%n", "Editorial", editorial);
+        System.out.printf ("│ %-15s: %-30s │%n", "ISBN", isbn);
+        System.out.printf ("│ %-15s: %-30s │%n", "Categoría", categoria);
+        System.out.printf ("│ %-15s: %-30d │%n", "Stock", stock);
+        System.out.printf ("│ %-15s: $%-29.2f │%n", "Precio", precio);
+        System.out.printf ("│ %-15s: %-30s │%n", "Año publicación", anioPublicacion);
+        System.out.println("└─────────────────────────────────────────────────┘");
     }
 
     @Override
@@ -100,9 +139,33 @@ public class Libro {
                 ", isbn='" + isbn + '\'' +
                 ", categoria='" + categoria + '\'' +
                 ", stock=" + stock +
-                ", pracio=" + pracio +
-                ", fechaPublicacion=" + fechaPublicacion +
+                ", precio=" + precio +
+                ", anioPublicacion=" + anioPublicacion +
                 '}';
     }
+    public static Libro registrarLibro(){
+        try {
+            Scanner sc=new Scanner(System.in);
+            System.out.println("INGRESE TITULO DEL LIBRO");
+            String titulo=sc.nextLine();
+            System.out.println("INGRESE AUTOR DEL LIBRO");
+            String autor=sc.nextLine();
+            System.out.println("INGRESE EDITORIAL DEL LIBRO");
+            String editorial=sc.nextLine();
+            System.out.println("INGRESE ISBN DEL LIBRO");
+            String isbn=sc.nextLine();
+            System.out.println("INGRESE LA CATEGORIA DEL LIBRO");
+            String categoria=sc.nextLine();
+            System.out.println("INGRESE LA AÑO DE PUBLICACIÓN DEL LIBRO");
+            int anioPublicacion=sc.nextInt();
+            Libro nue=new Libro(titulo,autor,editorial,isbn,categoria,anioPublicacion);
+            System.out.println("LIBRO REGISTRADO CORRECTAMENTE");
+            return nue;
+        }catch (Exception ex ){
+            System.out.println("Datos no registrados intente de nuevo");
+            return null;
+        }
 
+
+    }
 }

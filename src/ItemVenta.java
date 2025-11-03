@@ -4,12 +4,12 @@ public class ItemVenta {
     private int cantidad;
     private double precioUnitario, subtotal;
 
-    public ItemVenta(String itemId, Libro libro, int cantidad, double precioUnitario, double subtotal) {
+    public ItemVenta(String itemId, Libro libro, int cantidad) {
         this.itemId = itemId;
         this.libro = libro;
         this.cantidad = cantidad;
-        this.precioUnitario = precioUnitario;
-        this.subtotal = subtotal;
+        this.precioUnitario = libro.getprecio();
+        this.subtotal = cantidad*libro.getprecio();
     }
 
     public String getItemId() {

@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -8,14 +9,14 @@ public class Venta {
     private List<ItemVenta> items;
     private double total;
 
-    public Venta(String ventaId, String estado, String tipoPago, Date fechaVenta, Cliente cliente, List<ItemVenta> items, double total) {
+    public Venta(String ventaId, String tipoPago, Cliente cliente, List<ItemVenta> items) {
         this.ventaId = ventaId;
-        this.estado = estado;
+        this.estado = "PENDIENTE";
         this.tipoPago = tipoPago;
-        this.fechaVenta = fechaVenta;
+        this.fechaVenta = new Date();
         this.cliente = cliente;
         this.items = items;
-        this.total = total;
+        this.total = items.stream().mapToDouble(e->e.getSubtotal()).sum();
     }
 
     public String getVentaId() {
@@ -72,6 +73,45 @@ public class Venta {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+    public void mostrarInformacion(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy 'a las' HH:mm");
+
+        System.out.println("┌─────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                        INFORMACIÓN DE VENTA                         │");
+        System.out.println("├─────────────────────────────────────────────────────────────────────┤");
+        System.out.printf ("│ %-15s: %-45s │%n", "ID Venta", ventaId);
+        System.out.printf ("│ %-15s: %-45s │%n", "Estado", estado);
+        System.out.printf ("│ %-15s: %-45s │%n", "Tipo Pago", tipoPago);
+        System.out.printf ("│ %-15s: %-45s │%n", "Fecha", sdf.format(fechaVenta));
+        System.out.printf ("│ %-15s: %-45s │%n", "Cliente", cliente.getNombre());
+        System.out.println("├─────────────────────────────────────────────────────────────────────┤");
+        System.out.println("│                             DETALLE                                 │");
+        System.out.println("├─────────────────────────────────────────────────────────────────────┤");
+
+        // Mostrar items de la venta
+        if (items != null && !items.isEmpty()) {
+            System.out.println("│ Producto                                     Cant.    Precio │");
+            System.out.println("├─────────────────────────────────────────────────────────────────────┤");
+
+            for (ItemVenta item : items) {
+                String descripcion = item.getLibro() != null ? item.getLibro().getLibroId()+" - "+item.getLibro().getTitulo()  : "Producto";
+                if (descripcion.length() > 35) {
+                    descripcion = descripcion.substring(0, 32) + "...";
+                }
+
+                System.out.printf("│ %-40s %8d $%9.2f │\n",
+                        descripcion,
+                        item.getCantidad(),
+                        item.getLibro().getprecio());
+            }
+        } else {
+            System.out.println("│ No hay items en esta venta                                  │");
+        }
+
+        System.out.println("├─────────────────────────────────────────────────────────────────────┤");
+        System.out.printf ("│ %-15s: $%-43.2f │%n", "TOTAL", total);
+        System.out.println("└─────────────────────────────────────────────────────────────────────┘");
     }
 
     @Override
